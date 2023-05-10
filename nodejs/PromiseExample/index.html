@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Button Example</title>
+    <link href="./style.css" rel="stylesheet" />
+  </head>
+  <body>
+    <label for="input-field">Enter a value:</label>
+    <input id="input-field" type="text">
+    <button id="my-button">Submit</button>
+    <p id="url"></p>    
+    <p id="commits"></p>    
+    <p id="output"></p>
+
+    <script>
+      const button = document.querySelector('#my-button');
+      const inputField = document.querySelector('#input-field');
+      const outputElement = document.querySelector('#output');
+      const url = document.getElementById('url');
+      const commits = document.getElementById('commits');      
+
+      button.addEventListener('click', async () => {
+        const inputValue = inputField.value;
+        while (commits.firstChild) {
+            commits.removeChild(commits.firstChild);
+        }        
+        while (url.firstChild) {
+            url.removeChild(url.firstChild);
+        }        
+
+        const response = await fetch(`http://127.0.0.1:5000/search/${inputValue}`);
+        fetch(`http://127.0.0.1:5000/search/${inputValue}`).then((response) => {
+            response.json().then((data) => {
+                data.gitTitle.forEach(element => {
+                    const newParagraph = document.createElement('p');
+                    newParagraph.appendChild(document.createTextNode(element));
+                    commits.appendChild(newParagraph);
+                });
+  
+                data.issues.forEach(issue => {
+                    const href = document.createElement('a');
+                    href.setAttribute("href", issue.url);
+                    href.appendChild(document.createTextNode("Jira Link"));
+                    url.appendChild(href);
+                })
+            });
+        });
+    });
+    </script>
+  </body>
+</html>

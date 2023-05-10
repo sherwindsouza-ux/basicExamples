@@ -1,0 +1,11 @@
+p {
+    padding: 20px;
+}
+
+a {
+    border: 2px solid red;
+}
+
+label {
+    border: 5px solid red;
+}
